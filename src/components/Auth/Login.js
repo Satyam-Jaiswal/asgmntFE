@@ -1,44 +1,66 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import "./auth.css";
 import { Button, Row, Input, Form, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { set_token } from "../../@helper/localstorage";
 import { postData } from "../../api/api.js";
+
 const FormItem = Form.Item;
 
 function Login() {
   const navigate = useNavigate();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
   const onFinish = (values) => {
     let data = {
-      email: values.username,
+      email: values.email,
       password: values.password,
     };
 
     postData("api/auth/login", data).then((result) => {
-      console.log(result);
-      if (result?.success === true) {
-        console.log(result.body);
-        message.success("Login Successful");
+      if (result.success === true) {
+        console.log(result);
+        messageApi.open({
+          type: "success",
+          content: "Login Successful",
+        });
         set_token(result.body.token);
-        navigate("/dashboard");
+        // setTimeout(() => {
+        navigate("/home");
+        // }, 1000);
+      } else {
+        messageApi.open({
+          type: "error",
+          content: "Invalid credentials",
+        });
       }
     });
   };
 
+  const error = () => {
+    messageApi.open({
+      type: "error",
+      content: "Invalid credentials",
+    });
+  };
+
   const handleGoogleSignIn = () => {
-    // Implement Google Sign-In logic here
-    console.log("Google Sign-In clicked");
+    console.log("google sign in");
+    error();
   };
 
   return (
     <Fragment>
+      {contextHolder}
+
       <div className="form">
         <div className="formfields">
           <div className="logo">APP logo</div>
           <div>
             <Form style={{ marginTop: "40px" }} onFinish={onFinish}>
-              <FormItem name="username" rules={[{ required: true }]}>
-                <Input placeholder={"Username"} />
+              <FormItem name="email" rules={[{ required: true }]}>
+                <Input placeholder={"Email"} />
               </FormItem>
               <FormItem name="password" rules={[{ required: true }]}>
                 <Input type="password" placeholder={`Password`} />

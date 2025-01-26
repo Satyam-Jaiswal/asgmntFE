@@ -2,6 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
+import TaskBoard from "./components/TaskManagement/TaskBoard";
+import Feed from "./components/Feed/Feed";
+import { TaskProvider } from "./context/TaskContext";
+import Dashboard from "./components/Dashboard";
+import Test from "./components/Test";
 
 const App = () => {
   return (
@@ -9,7 +14,17 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
-        <Route path="/" exact element={<h1>Welcome to the Todo List App</h1>} />
+        <Route path="/home/*" element={<Dashboard />} />
+        {/* <Route
+          path="/tasks"
+          element={
+            <TaskProvider>
+              <TaskBoard />{" "}
+            </TaskProvider>
+          }
+        />
+        <Route path="/feed" element={<Feed />} /> */}
+        <Route path="/" exact element={<Login />} />
       </Routes>
     </Router>
   );

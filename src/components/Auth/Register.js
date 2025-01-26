@@ -8,25 +8,36 @@ import { set_token, get_user_name } from "../../@helper/localstorage";
 const FormItem = Form.Item;
 
 function Register() {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const navigate = useNavigate();
   const onFinish = (values) => {
     let data = {
       username: values.username,
+      email: values.email,
       password: values.password,
-      role: "User",
     };
 
-    postData("api/auth/login", data).then((result) => {
+    postData("api/auth/register", data).then((result) => {
       if (result?.success === true) {
-        message.success("User created Successfully");
+        messageApi.open({
+          type: "success",
+          content: "User registered successfully",
+        });
         set_token(result.body.token);
-        navigate.push("/login");
+        navigate("/login");
       }
     });
   };
 
+  const handleGoogleSignUp = () => {
+    window.open("/api/auth/google", "_self");
+  };
+
   return (
     <Fragment>
+      {contextHolder}
+
       <div className="form">
         <div className="formfields">
           <div className="logo">
@@ -39,7 +50,7 @@ function Register() {
                 <Input placeholder={"Username"} />
               </FormItem>
 
-              <FormItem name="Email" rules={[{ required: true }]} hasFeedback>
+              <FormItem name="email" rules={[{ required: true }]} hasFeedback>
                 <Input placeholder={"Email"} />
               </FormItem>
 
@@ -77,6 +88,15 @@ function Register() {
                   style={{ width: "100%" }}
                 >
                   <div>Sign up</div>
+                </Button>
+              </Row>
+              <Row>
+                <Button
+                  type="default"
+                  style={{ width: "100%", marginTop: "10px" }}
+                  onClick={handleGoogleSignUp}
+                >
+                  <div>Sign up with Google</div>
                 </Button>
               </Row>
               <div style={{ textAlign: "center" }}>
