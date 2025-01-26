@@ -2,7 +2,8 @@ import axios from "axios";
 import { message } from "antd";
 import { get_token } from "../@helper/localstorage";
 
-const baseUrl = "http://localhost:8080/";
+// const baseUrl = "http://localhost:8080/";
+const baseUrl = "https://asgmntbe.onrender.com/";
 
 axios.defaults.validateStatus = function (status) {
   return status < 500; // Accept all responses with status less than 500
